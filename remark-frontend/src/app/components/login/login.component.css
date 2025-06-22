@@ -1,0 +1,78 @@
+.login-container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px 25px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #4A148C;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #555;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #8e24aa;
+  box-shadow: 0 0 3px rgba(142, 36, 170, 0.4);
+}
+
+button.btn.primary {
+  width: 100%;
+  padding: 10px;
+  background-color: #8e24aa;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button.btn.primary:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button.btn.primary:hover:not(:disabled) {
+  background-color: #6a1b9a;
+}
+
+.link-text {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.link-text a {
+  color: #8e24aa;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.link-text a:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,15 @@
+<h2>📜 Ride History</h2>
+<table>
+  <tr>
+    <th>Pickup</th>
+    <th>Drop</th>
+    <th>Fare</th>
+    <th>Time</th>
+  </tr>
+  <tr *ngFor="let ride of rides">
+    <td>{{ ride.pickup }}</td>
+    <td>{{ ride.drop }}</td>
+    <td>₹{{ ride.fare }}</td>
+    <td>{{ ride.time }}</td>
+  </tr>
+</table>

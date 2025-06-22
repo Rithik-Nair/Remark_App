@@ -1,0 +1,32 @@
+<!-- 🛵 DASHBOARD UI visible only when ride hasn't started -->
+<div *ngIf="!showMapOnly" class="dashboard-ui">
+  <nav class="top-nav">
+    <div class="logo">🛵 Remark</div>
+    <div class="location">📍 Jaipur, Rajasthan</div>
+    <div class="profile">
+      <button type="button" (click)="toggleMenu()">👤</button>
+      <ul *ngIf="menuOpen" class="dropdown">
+        <li><a routerLink="/history">History</a></li>
+        <li><a routerLink="/profile">Profile</a></li>
+        <li><button type="button" (click)="logout()">Logout</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="ride-controls">
+    <input [(ngModel)]="pickup" placeholder="Pickup Location (e.g. 26.9124,75.7873)" />
+    <input [(ngModel)]="destination" placeholder="Destination (e.g. 26.9250,75.8000)" />
+    <button class="btn book" type="button" (click)="bookRide()">Ride Now</button>
+    <button class="btn schedule" type="button">Schedule</button>
+    <button class="btn locate" type="button" (click)="getCurrentLocation()">📍 Use My Location</button>
+  </section>
+
+  <section class="ride-options">
+    <h3>Select a Ride</h3>
+    <div class="option">🛵 EV Bike - ₹30</div>
+    <div class="option">🛵✨ Premium EV - ₹80</div>
+  </section>
+</div>
+
+<!-- 🗺️ MAP ONLY visible after ride starts -->
+<div *ngIf="showMap" id="map" style="height: 500px; margin-top: 20px;"></div>

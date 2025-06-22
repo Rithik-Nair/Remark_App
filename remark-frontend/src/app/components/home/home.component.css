@@ -1,0 +1,56 @@
+.hero {
+  background: linear-gradient(to right, #ffc0cb, #ff69b4); /* soft pink to hot pink */
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.btn.primary {
+  background-color: #fff;
+  color: #ff1493;
+}
+
+.btn.secondary {
+  background-color: #ff69b4;
+  color: #fff;
+}
+
+.btn.book {
+  background-color: #ff1493;
+  color: #fff;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
