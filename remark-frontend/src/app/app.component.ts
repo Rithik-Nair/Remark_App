@@ -11,5 +11,5 @@ import { NavbarComponent } from './components/navbar/navbar.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'remark-frontend';
+  title = 'Welcome to Remark Application';
 }
