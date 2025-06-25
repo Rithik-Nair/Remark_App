@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,16 +14,27 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  userRole: string = 'rider'; // or 'driver' - could be selected via dropdown in form
+  userRole: string = 'rider';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   onLogin() {
-    // Simple role-based navigation (replace with actual auth logic)
-    if (this.userRole === 'driver') {
-      this.router.navigate(['/driver-dashboard']);
-    } else {
-      this.router.navigate(['/user-dashboard']);
-    }
+    this.authService.loginUser(this.email, this.password).subscribe({
+      next: (res: any) => {
+        if (res.token) {
+          localStorage.setItem('token', res.token);
+        }
+        if (res.success) {
+          alert('Login successful!');
+          this.router.navigate([this.userRole === 'driver' ? '/driver-dashboard' : '/user-dashboard']);
+        } else {
+          alert('Login failed!');
+        }
+      },
+      error: (err: any) => {
+        console.error('Login error:', err);
+        alert(err.error?.message || 'Invalid email or password ❌');
+      }
+    });
   }
 }

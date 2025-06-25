@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import * as L from 'leaflet';
+import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -11,7 +12,7 @@ import * as L from 'leaflet';
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css']
 })
-export class UserDashboardComponent {
+export class UserDashboardComponent implements OnInit {
   pickup: string = '';
   destination: string = '';
   menuOpen: boolean = false;
@@ -25,12 +26,29 @@ export class UserDashboardComponent {
 
   constructor(private router: Router) {}
 
+  ngOnInit(): void {
+    // Optionally, you could get location on load
+    // this.getCurrentLocation();
+  }
+
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
 
   logout() {
     this.router.navigate(['/login']);
+  }
+
+  async getCurrentLocation() {
+    try {
+      const position = await Geolocation.getCurrentPosition();
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      this.pickup = `${lat}, ${lng}`;
+    } catch (error) {
+      console.error('Location error:', error);
+      alert('Enable location permission in app settings.');
+    }
   }
 
   bookRide(): void {
@@ -40,7 +58,7 @@ export class UserDashboardComponent {
     }
 
     this.showMap = true;
-    setTimeout(() => this.initMap(), 0); // allow HTML to load
+    setTimeout(() => this.initMap(), 0);
 
     alert('Driver Assigned 🚗');
 
@@ -69,24 +87,6 @@ export class UserDashboardComponent {
     return L.latLng(lat, lng);
   }
 
-  getCurrentLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          this.pickup = `${lat}, ${lng}`;
-        },
-        (error) => {
-          console.error('Location error', error);
-          alert('Enable location permission in your browser.');
-        }
-      );
-    } else {
-      alert('Geolocation not supported.');
-    }
-  }
-
   simulateDriverToPickup(pickup: L.LatLng) {
     let driverLat = pickup.lat - 0.005;
     let driverLng = pickup.lng - 0.005;
@@ -110,22 +110,22 @@ export class UserDashboardComponent {
   }
 
   verifyOTP(pickupLatLng: L.LatLng) {
-  const enteredOtp = prompt('Enter OTP sent to your phone:');
+    const enteredOtp = prompt('Enter OTP sent to your phone:');
 
-  if (enteredOtp === '1234') {
-    alert('OTP Verified ✅');
-    this.showMapOnly = true;  // Show map, hide UI
+    if (enteredOtp === '1234') {
+      alert('OTP Verified ✅');
+      this.showMapOnly = true;
 
-    setTimeout(() => {
-      this.showRideSummary();
+      setTimeout(() => {
+        this.showRideSummary();
 
-      const destLatLng = this.getDestinationLatLng();
-      this.showRouteToDestination(pickupLatLng, destLatLng);
-    }, 100); // Wait for DOM to update before drawing
-  } else {
-    alert('Invalid OTP ❌');
+        const destLatLng = this.getDestinationLatLng();
+        this.showRouteToDestination(pickupLatLng, destLatLng);
+      }, 100);
+    } else {
+      alert('Invalid OTP ❌');
+    }
   }
-}
 
   showRouteToDestination(pickup: L.LatLng, drop: L.LatLng) {
     this.map.eachLayer((layer: any) => {
@@ -187,6 +187,6 @@ export class UserDashboardComponent {
     const fare = 60;
     const eta = 8;
     const rideType = "EV Bike";
-    alert(`✅ Ride Confirmed!\n\n🚗 Ride Type: ${rideType}\n🕒 ETA: ${eta} mins\n💰 Fare: ₹${fare}\n\nTrack your driver on the map.`);
+    alert(`✅ Ride Confirmed!\n\n 🚴‍♀️ Ride Type: ${rideType}\n🕒 ETA: ${eta} mins\n💰 Fare: ₹${fare}\n\nTrack your driver on the map.`);
   }
 }

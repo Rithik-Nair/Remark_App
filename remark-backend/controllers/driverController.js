@@ -1,6 +1,20 @@
 const pool = require('../db');
 const bcrypt = require('bcrypt');
 
+exports.updateLocation = async (req, res) => {
+  const { userId, lat, lng } = req.body;
+  try {
+    await pool.query(
+      `UPDATE users SET current_location = ST_SetSRID(ST_MakePoint($1, $2), 4326) WHERE id = $3`,
+      [lng, lat, userId]
+    );
+    res.json({ success: true, message: 'Location updated' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Error updating location' });
+  }
+};
+
 exports.registerDriver = async (req, res) => {
   const { name, email, phone, password, vehicle_number } = req.body;
   try {

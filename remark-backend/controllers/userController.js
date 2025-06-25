@@ -1,17 +1,18 @@
-const pool = require('../db');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const pool = require('../db');
 
 exports.registerUser = async (req, res) => {
-  const { name, email, phone, password } = req.body;
+  const { name, email, password } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const result = await pool.query(
-      'INSERT INTO users (name, email, phone, password) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, email, phone, hashedPassword]
+    await pool.query(
+      'INSERT INTO users (name, email, password) VALUES ($1, $2, $3)',
+      [name, email, hashedPassword]
     );
-    res.status(201).json({ message: 'User registered', user: result.rows[0] });
+    res.status(201).json({ success: true, message: 'User registered successfully' });
   } catch (err) {
-    res.status(400).json({ error: 'Registration failed', details: err.message });
+    res.status(500).json({ success: false, message: 'Registration failed', error: err.message });
   }
 };
 
@@ -19,15 +20,21 @@ exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (result.rows.length === 0) {
+      return res.status(401).json({ success: false, message: 'Invalid email or password' });
+    }
+
     const user = result.rows[0];
-
-    if (!user) return res.status(401).json({ error: 'User not found' });
-
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: 'Invalid password' });
 
-    res.json({ message: 'Login successful', user });
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: 'Invalid email or password' });
+    }
+
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    res.json({ success: true, message: 'Login successful', token });
   } catch (err) {
-    res.status(500).json({ error: 'Login failed', details: err.message });
+    res.status(500).json({ success: false, message: 'Login failed', error: err.message });
   }
 };
